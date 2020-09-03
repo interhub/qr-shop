@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Provider, useSelector} from "react-redux";
 import store from "./src/store/store";
 import {NavigationContainer} from '@react-navigation/native';
@@ -12,6 +12,7 @@ import {StateType} from "./src/types/types";
 import Scan from "./src/screen/Scan/Scan";
 import Setting from "./src/screen/Setting/Setting";
 import {ListBtn, ScanBtn, SettingBtn} from './src/comps/HeaderBtns'
+import Loader from './src/comps/Loader';
 
 const Stack = createStackNavigator();
 
@@ -70,6 +71,7 @@ function App() {
                         ...getHeaderStyle()
                     }}/>
             </Stack.Navigator>
+            <Loader/>
         </NavigationContainer>
 
     );

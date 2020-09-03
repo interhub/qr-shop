@@ -1,47 +1,76 @@
-import React, {useEffect, useState} from 'react';
-import {Button, StyleSheet, Text, View} from 'react-native';
-import {BarCodeScanner} from 'expo-barcode-scanner';
+import React, {useEffect, useRef, useState} from 'react';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
+import {StateType, TovarType} from "../../types/types";
+import {Button, List} from "react-native-paper";
+import SCREEN_NAME from "../../vars/SCREEN_NAME";
+import ListItem from '../../comps/Listitem';
+import {useDispatch, useSelector} from "react-redux";
+import {setLoadAction} from "../../store/actions";
+import {Modalize} from "react-native-modalize";
+import Modals from "./Modals";
+import storeTool from '../../vars/storeTool';
 
-export default function App() {
-    const [hasPermission, setHasPermission] = useState<any>(null);
-    const [scanned, setScanned] = useState(false);
+const testArray = new Array(20).fill({
+    id: 1231,
+    name: 'Apple',
+    price: 234,
+    about: 'hello world',
+    made: 'hello world',
+    create: 1231423423423,
+    uri: 'https://frutstar.ru/image/catalog/fruits/yabloki.jpg'
+})
+    .map((el, key) => ({...el, key}))
 
-    useEffect(() => {
-        (async () => {
-            const {status}: { status: string } = await BarCodeScanner.requestPermissionsAsync();
-            setHasPermission(status === 'granted');
-        })();
-    }, []);
-
-    const handleBarCodeScanned = ({type, data}: { type: any, data: any }) => {
-        setScanned(true);
-        alert(`type ${type} / data ${data}`);
-    };
-
-    if (hasPermission === null) {
-        return <Text>Requesting for camera permission</Text>;
-    }
-    if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
-    }
-
+export default function ListTovars() {
+    const {load} = useSelector<StateType, StateType>((state => state))
+    const [list, setList] = useState<TovarType[]>([]);
+    const [openItem, setOpenItem] = useState<TovarType | any>({});
     const navigation = useNavigation();
+    const dispatch = useDispatch()
+    const getAndSetList = async () => {
+        dispatch(setLoadAction(true))
+        setList(await storeTool.getList())
+        // setList(testArray)
+        dispatch(setLoadAction(false))
+    }
+    useEffect(() => {
+        let stop = false
+        navigation.addListener('focus', () => {
+            stop = true
+            getAndSetList()
+        })
+        if (!stop)
+            getAndSetList()
+    }, [])
 
+    const modalizeRef = useRef<Modalize>(null);
+    const onOpen = (item: TovarType) => {
+        setOpenItem(item)
+        modalizeRef.current?.open();
+    };
     return (
         <View
-            style={{
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-            }}>
-            {/*<BarCodeScanner*/}
-
-            {/*    onBarCodeScanned={({type, data}) => scanned ? undefined : handleBarCodeScanned({type, data})}*/}
-            {/*    style={StyleSheet.absoluteFillObject}*/}
-            {/*/>*/}
-
-            <Button title={'Tap to Scan Again'} onPress={() => {}}/>
+            style={{flex: 1}}>
+            <Modals item={openItem} modalizeRef={modalizeRef}/>
+            {list.length > 0 && <FlatList data={testArray} renderItem={
+                ({index, item}) => {
+                    return <ListItem item={item} onOpen={onOpen}/>
+                }}
+                                          keyExtractor={(item) => String(item.id)}/>}
+            {list.length === 0 && !load && <View>
+                <List.Item style={{marginTop: 150}} title="Продукты отсутствуют"/>
+                <Button
+                    onPress={() => {
+                        navigation.navigate(SCREEN_NAME.SCAN)
+                    }}
+                    style={styles.btnNew} mode={'contained'} labelStyle={styles.btnNew}>Добавить</Button>
+            </View>}
         </View>
     );
 }
+const styles = StyleSheet.create({
+    btnNew: {
+        margin: 20,
+    }
+})
