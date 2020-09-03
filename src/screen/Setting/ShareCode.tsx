@@ -5,6 +5,8 @@ import {useDispatch} from "react-redux";
 import STORE_NAME from "../../vars/STORE_NAME";
 import {List} from "react-native-paper";
 import {useNavigation} from "@react-navigation/native";
+import storeTool from "../../vars/storeTool";
+import {TovarType} from "../../types/types";
 
 const QRCode: any = require('react-native-qrcode-svg').default
 
@@ -13,11 +15,9 @@ export default () => {
     const [data, setData] = useState('');
     const dispatch = useDispatch()
     useEffect(() => {
-        AsyncStorage.getItem(STORE_NAME.LIST)
-            .then((data) => {
-                if (data) {
-                    setData(JSON.parse(data))
-                }
+        storeTool.getList()
+            .then((data:TovarType[])=>{
+                setData(JSON.stringify(data))
             })
     }, [])
     if(!data){
