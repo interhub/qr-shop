@@ -2,7 +2,7 @@ import {StyleSheet, Text, View} from "react-native";
 import {Modalize} from "react-native-modalize";
 import React, {RefObject} from "react";
 import {TovarType} from "../../types/types";
-import {Avatar, List} from "react-native-paper";
+import {Avatar, List, Caption, Headline} from "react-native-paper";
 import moment from "moment";
 
 export default ({modalizeRef, item}: { modalizeRef: RefObject<any>, item: TovarType }) => {
@@ -16,20 +16,16 @@ export default ({modalizeRef, item}: { modalizeRef: RefObject<any>, item: TovarT
             </View>
             <View>
                 <List.Section title={'Описание'}>
-                    <List.Item
-                        title={item?.about}/>
+                    <Caption>{item?.about}</Caption>
                 </List.Section>
                 <List.Section title={'Производитель'}>
-                    <List.Item
-                        title={item?.made}/>
+                    <Caption>{item?.made}</Caption>
                 </List.Section>
                 {item?.create && <List.Section title={'Время упаковки'}>
-                    <List.Item
-                        title={moment(item?.create).format('DD MM YY, HH:mm')}/>
+                    <Caption>{moment(item?.create).format('DD.MM.YY, HH:mm')+ ' ч'}</Caption>
                 </List.Section>}
                 <List.Section title={'Стоимость'}>
-                    <List.Item
-                        title={item?.price+'$'}/>
+                    <Headline>{item?.price+'$'}</Headline>
                 </List.Section>
             </View>
         </View>
