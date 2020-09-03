@@ -53,6 +53,7 @@ export default function ListTovars() {
         dispatch(setLoadAction(true))
         storeTool.deleteByIndex(index)
             .then(()=>{
+                modalizeRef.current?.close();
                 Message('Успешно удалено')
                 getAndSetList()
                     .then(()=>{
