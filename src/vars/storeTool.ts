@@ -27,6 +27,17 @@ class StoreTool {
         }
     }
 
+    async deleteByIndex(index: number) {
+        try {
+            let old = await this.getList()
+            old.splice(index, 1)
+            await AsyncStorage.setItem(STORE_NAME.LIST, JSON.stringify(old))
+            return old
+        } catch (e) {
+            console.warn(e)
+        }
+    }
+
     async clearList() {
         return AsyncStorage.clear()
     }
