@@ -31,7 +31,7 @@ export default () => {
                     <QRCode
                         style={{marginTop: 100}}
                         size={WIDTH - 50}
-                        value={JSON.stringify(item)}/>
+                        value={JSON.stringify(data[item])}/>
                 </View>
             })}
         </ScrollView>
