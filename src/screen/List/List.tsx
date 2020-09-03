@@ -29,19 +29,18 @@ export default function ListTovars() {
     const navigation = useNavigation();
     const dispatch = useDispatch()
     const getAndSetList = async () => {
+        console.warn('set')
         dispatch(setLoadAction(true))
         setList(await storeTool.getList())
         // setList(testArray)
         dispatch(setLoadAction(false))
     }
     useEffect(() => {
-        let stop = false
+        getAndSetList()
         navigation.addListener('focus', () => {
-            stop = true
             getAndSetList()
         })
-        if (!stop)
-            getAndSetList()
+        console.warn('use effect')
     }, [])
 
     const modalizeRef = useRef<Modalize>(null);
@@ -53,7 +52,7 @@ export default function ListTovars() {
         <View
             style={{flex: 1}}>
             <Modals item={openItem} modalizeRef={modalizeRef}/>
-            {list.length > 0 && <FlatList data={testArray} renderItem={
+            {list.length > 0 && <FlatList data={list} renderItem={
                 ({index, item}) => {
                     return <ListItem item={item} onOpen={onOpen}/>
                 }}

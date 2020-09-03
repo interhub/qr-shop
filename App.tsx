@@ -21,19 +21,7 @@ function App() {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={SCREEN_NAME.START}>
-                <Stack.Screen
-                    name={SCREEN_NAME.START}
-                    component={Start}
-                    options={{
-                        ...getHeaderOptions(
-                            () => <SettingBtn/>,
-                            () => <ScanBtn/>,
-                            null
-                        ),
-                        ...optionAnimationLeft(true),
-                        ...getHeaderStyle()
-                    }}/>
+            <Stack.Navigator initialRouteName={SCREEN_NAME.LIST}>
                 <Stack.Screen
                     name={SCREEN_NAME.LIST}
                     component={List}
@@ -70,6 +58,18 @@ function App() {
                         ...optionAnimationLeft(true),
                         ...getHeaderStyle()
                     }}/>
+                {/*<Stack.Screen*/}
+                {/*    name={SCREEN_NAME.START}*/}
+                {/*    component={Start}*/}
+                {/*    options={{*/}
+                {/*        ...getHeaderOptions(*/}
+                {/*            () => <SettingBtn/>,*/}
+                {/*            () => <ScanBtn/>,*/}
+                {/*            null*/}
+                {/*        ),*/}
+                {/*        ...optionAnimationLeft(true),*/}
+                {/*        ...getHeaderStyle()*/}
+                {/*    }}/>*/}
             </Stack.Navigator>
             <Loader/>
         </NavigationContainer>
